@@ -1,4 +1,5 @@
 import os
+import contacts
 
-def contacts_outside_state():
- q   
+contacts = contacts.contact_dict()
+print(contacts)     
