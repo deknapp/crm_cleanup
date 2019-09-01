@@ -17,5 +17,14 @@ def contact_dict():
       contact_dict[split_line[0]][header[i]] = split_line[i]
   return contact_dict
   
-
+def write_contact_dict(dct, out_file, header):
+  handle = open(out_file, 'w')
+  handle.write(header)
+  for key in dct:
+    handle.write(key)
+    for subkey in dct[key]:
+      handle.write('|'
+      handle.write(subkey)
+    handle.write('\n')
+     
        
