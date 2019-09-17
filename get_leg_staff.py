@@ -7,6 +7,28 @@ def get_email(first, last):
 def leg_to_key(leg):
   return leg[1] + leg[0]
 
+def cleanup(line):
+  first_chunk = ''
+  middle_chunk = ''
+  if 'Sen.' in line:
+    first_chunk = line.split('Sen.')[0].replace('.', ',')
+    middle_chunk = 'Sen.' + line.split('Sen.')[1].split('gov')[0] + 'gov'
+  elif 'Rep.' in line:
+    first_chunk = line.split('Rep.')[0].replace('.', ',')
+    middle_chunk = 'Rep.' + line.split('Rep.')[1].split('gov')[0] + 'gov'
+  else:
+    return ''
+  last_chunk = line.split('gov')[-1].replace('.', ',')
+  return first_chunk + middle_chunk + last_chunk
+
+def dots_to_comma(line):
+  cleaned_line = []
+  for chunk in line.split('.'):
+    if chunk != '':
+      cleaned_line.append(chunk) 
+  joined_line = '.'.join(cleaned_line) 
+  return cleanup(joined_line)
+
 bad_file = '/Users/nknapp/Desktop/akpirg/leg_staff.txt'
 handle = open(bad_file, 'r')
 lines = handle.readlines()
@@ -28,8 +50,5 @@ for line in lines:
       last = staff.split(' ')[2] 
       staff_dict[leg_key].append([first, last])
 
-
- 
-for key in staff_dict:
-  print(key, staff_dict[key]) 
-
+for line in lines:
+  print(dots_to_comma(line))
