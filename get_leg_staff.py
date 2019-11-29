@@ -45,13 +45,15 @@ def print_sen_file(leg_list):
 
 def print_staff_file(staff_dict):
   handle = open('/Users/nknapp/Desktop/akpirg/staff_contact.txt', 'w')
-  handle.write('First,Last,Email,Legislator First,Legislator Last\n')
+  handle.write('First,Last,Email,Phone,Legislator Type,Legislator\n')
   for legislator in staff_dict:
     for staff in staff_dict[legislator]:
       line_info = []
       line_info.append(staff[0])
       line_info.append(staff[1])
       line_info.append(get_email(staff[0], staff[1]))
+      line_info.append(staff[2])
+      line_info.append(staff[3])
       line_info.append(legislator)
       handle.write(','.join(line_info) + '\n')
 
@@ -68,19 +70,23 @@ for line in lines:
     leg_last_name = leg_name.split(' ')[0][:-1].title()
     leg_first_name = leg_name.split(' ')[1].title()
     full_staff_list = line[:-1].split('Staff:')[-1].split(',')
-    leg_key = leg_first_name + ',' + leg_last_name
+    leg_key = leg_first_name + ' ' + leg_last_name
     staff_dict[leg_key] = []
     cleaned_line = dots_to_comma(line)
     comma_split_line = cleaned_line.split(',')
-    email = comma_split_line[2]
-    phone = comma_split_line[3]  
+    email = comma_split_line[2].strip()
+    phone = comma_split_line[3].strip()  
+    leg_type = ''
+    if 'Sen.' in line:
+      leg_type = 'Senator'
+    else:
+      leg_type = 'Representative' 
     for staff in full_staff_list:
       first = staff.split(' ')[1] 
       last = staff.split(' ')[2] 
-      staff_dict[leg_key].append([first, last, phone])
-    leg_list.append([leg_first_name, leg_last_name, email, phone])
+      staff_dict[leg_key].append([first, last, '907-' + phone, leg_type])
+    leg_list.append([leg_first_name, leg_last_name, email, '907-' + phone])
 
-#print_rep_file(leg_list)
-#print_sen_file(leg_list)
-
-print_staff_file(staff_dict)    
+print_rep_file(leg_list)
+print_sen_file(leg_list)
+#print_staff_file(staff_dict)    
