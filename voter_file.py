@@ -14,7 +14,19 @@ def name_contact_dict(contact_dict):
     name_dict[k] = val
   return name_dict
 
-def print_out
+def state_voices_line(voter, contact):
+  # TODO: figure out best way to format this from EveryAction site
+  return line 
+
+def correct_contact_list(voter_dict, contact_dict, contact_correction_file):
+  corrected_contacts = open(contact_correction_file, 'r')
+  for voter in voter_dict:
+    first = voter['first_name']
+    last = voter['last_name']  
+    key = first + last
+    if key in contact_dict.keys():
+      contact = contact_dict[key]
+      correct_contacts.write(state_voices_line(voter, contact)) 
 
 voter_name = '/Users/nknapp/Desktop/akpirg/voter_file.csv'
 contact_name = '/Users/nknapp/Desktop/akpirg/state_voices.txt'
