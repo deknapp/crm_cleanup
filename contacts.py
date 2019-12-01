@@ -1,13 +1,22 @@
 import os
 
+def to_utf8(filename, newFilename, encoding_to='UTF-8'):
+  with open(filename, 'r') as fr:
+    with open(newFilename, 'w', encoding=encoding_to) as fw:
+      for line in fr:
+        fw.write(line[:-1]+'\r\n')
+
 def contact_dict(record_name): 
-  record_handle = open(record_name, 'r')
+ 
+  new_record_name = record_name + 'utf8' 
+  to_utf8(record_name, new_record_name)
+  record_handle = open(new_record_name, 'r')
   lines = record_handle.readlines()
   header = lines[0].split(' ') 
   contact_dict = {}
   print(len(header))
   for line in lines[1:]:
-    split_line = line.split(',')
+    split_line = line.split('|')
     print(len(split_line))
     for i in range(len(header)-1):
       print(header[i], split_line[i])
