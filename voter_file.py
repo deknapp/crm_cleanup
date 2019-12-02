@@ -12,6 +12,7 @@ def name_contact_dict(contact_dict):
   for key, val in contact_dict.items():
     k = val['First'] + val['Last']
     name_dict[k] = val
+    print(k)
   return name_dict
 
 def state_voices_line(voter, contact):
@@ -31,7 +32,9 @@ def correct_contact_list(voter_dict, contact_dict, contact_correction_file):
     first = voter['first_name']
     last = voter['last_name']  
     key = first + last
-    if key in contact_dict.keys():
+    print(key)
+    if key in list(contact_dict.keys()):
+      print(
       contact = contact_dict[key]
       correct_contacts.write(state_voices_line(voter, contact)) 
 
