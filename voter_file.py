@@ -21,7 +21,7 @@ def name_contact_dict(contact_dict):
   return name_dict
 
 def state_voices_line(voter, contact):
-  line_info_basic = [contact['First'], contact['Last']]
+  line_info_basic = [contact['VANID'], contact['First'], contact['Last']]
   address = [voter['address1__mailing_address'], voter['city__mailing_address'], voter['state__mailing_address'],
             voter['state__mailing_address'], voter['zip__mailing_address']] 
   voter_info = [voter['is_active_voter'], voter['party'], voter['state_lower_district'], voter['state_upper_district'], voter['precinct_name'], voter['precinct_code']] 
@@ -30,10 +30,11 @@ def state_voices_line(voter, contact):
   return line 
 
 def correct_contact_list(voter_dict, contact_dict, contact_correction_file):
-  header = ['First', 'Last', 'Address Line 1', 'City', 'State', 'Zip', 'Active Voter', 'Party', 'Lower', 'Upper', 'P_Name', 'P_Code']
+  header = ['VANID', 'First', 'Last', 'Address Line 1', 'City', 'State', 'Zip', 'Active Voter', 'Party', 'Lower', 'Upper', 'P_Name', 'P_Code']
   correct_contacts = open(contact_correction_file, 'w')
   # TODO: figure out best way to format this from EveryAction site
-  correct_contacts.write(','.join(header))
+  correct_contacts.write(','.join(header) + '\n')
+  list_counter = 0
   for voter in voter_dict:
     first = voter['first_name']
     last = voter['last_name']  
@@ -41,6 +42,8 @@ def correct_contact_list(voter_dict, contact_dict, contact_correction_file):
     if key in list(contact_dict.keys()):
       contact = contact_dict[key]
       correct_contacts.write(state_voices_line(voter, contact)) 
+      list_counter += 1
+  print("Number of contacts to update: " + list_counter)
 
 voter_name = '/Users/nknapp/Desktop/akpirg/voter_file.csv'
 contact_name = '/Users/nknapp/Desktop/akpirg/state_voices.txt'
@@ -51,11 +54,12 @@ name_contact_dict = name_contact_dict(contact_dict)
 
 voter_list = list(voter_dict)
 
-for voter in voter_list:
-  #print(voter)
-  break
+#for voter in voter_list:
+ # print(voter)
+ # break
 
 #print(contact_dict[list(contact_dict.keys())[0]]) 
+#exit()
 
 contact_correction_file = '/Users/nknapp/Desktop/akpirg/contacts_corrected_from_voter_file.txt'
 correct_contact_list(voter_list, name_contact_dict, contact_correction_file) 
