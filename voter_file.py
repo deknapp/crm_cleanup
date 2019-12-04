@@ -43,7 +43,7 @@ def correct_contact_list(voter_dict, contact_dict, contact_correction_file):
       contact = contact_dict[key]
       correct_contacts.write(state_voices_line(voter, contact)) 
       list_counter += 1
-  print("Number of contacts to update: " + list_counter)
+  print("Number of contacts to update: " + str(list_counter))
 
 voter_name = '/Users/nknapp/Desktop/akpirg/voter_file.csv'
 contact_name = '/Users/nknapp/Desktop/akpirg/state_voices.txt'

@@ -8,7 +8,7 @@ def contact_dict(record_name):
   for line in lines[1:]:
     split_line = line.split('|')
     contact_dict[split_line[0]] = {}
-    for i in range(1, len(header)-1):
+    for i in range(0, len(header)-1):
       contact_dict[split_line[0]][header[i]] = split_line[i]
   if not contact_dict:
     print("empty contact dict")
