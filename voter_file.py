@@ -9,10 +9,15 @@ def read_voter_file(voter_file_name):
 
 def name_contact_dict(contact_dict):
   name_dict = dict()
+  if len(contact_dict.items()) == 0:
+    print("ERROR: no items in contact dict")
+    exit()
   for key, val in contact_dict.items():
     k = val['First'] + val['Last']
     name_dict[k] = val
-    print(k)
+  if not name_dict:
+    print("nothing in name dict")
+    exit()
   return name_dict
 
 def state_voices_line(voter, contact):
@@ -21,7 +26,8 @@ def state_voices_line(voter, contact):
             voter['state__mailing_address'], voter['zip__mailing_address']] 
   voter_info = [voter['is_active_voter'], voter['party'], voter['state_lower_district'], voter['state_upper_district'], voter['precinct_name'], voter['precinct_code']] 
   line_info = line_info_basic + address + voter_info
-  return ','.join(line_info)
+  line = ','.join(line_info) + '\n'
+  return line 
 
 def correct_contact_list(voter_dict, contact_dict, contact_correction_file):
   header = ['First', 'Last', 'Address Line 1', 'City', 'State', 'Zip', 'Active Voter', 'Party', 'Lower', 'Upper', 'P_Name', 'P_Code']
@@ -32,9 +38,7 @@ def correct_contact_list(voter_dict, contact_dict, contact_correction_file):
     first = voter['first_name']
     last = voter['last_name']  
     key = first + last
-    print(key)
     if key in list(contact_dict.keys()):
-      print(
       contact = contact_dict[key]
       correct_contacts.write(state_voices_line(voter, contact)) 
 
@@ -48,10 +52,10 @@ name_contact_dict = name_contact_dict(contact_dict)
 voter_list = list(voter_dict)
 
 for voter in voter_list:
-  print(voter)
+  #print(voter)
   break
 
-print(contact_dict[list(contact_dict.keys())[0]]) 
+#print(contact_dict[list(contact_dict.keys())[0]]) 
 
 contact_correction_file = '/Users/nknapp/Desktop/akpirg/contacts_corrected_from_voter_file.txt'
-correct_contact_list(voter_dict, name_contact_dict, contact_correction_file) 
+correct_contact_list(voter_list, name_contact_dict, contact_correction_file) 
