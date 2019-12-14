@@ -22,8 +22,7 @@ def name_contact_dict(contact_dict):
 
 def state_voices_line(voter, contact):
   line_info_basic = [contact['VANID'], contact['First'], contact['Last']]
-  address = [voter['address1__mailing_address'], voter['city__mailing_address'], voter['state__mailing_address'],
-            voter['state__mailing_address'], voter['zip__mailing_address']] 
+  address = [voter['address1__mailing_address'], voter['city__mailing_address'], voter['state__mailing_address'], voter['zip__mailing_address']] 
   voter_info = [voter['is_active_voter'], voter['party'], voter['state_lower_district'], voter['state_upper_district'], voter['precinct_name'], voter['precinct_code']] 
   line_info = line_info_basic + address + voter_info
   line = ','.join(line_info) + '\n'

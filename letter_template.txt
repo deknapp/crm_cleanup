@@ -1,0 +1,14 @@
+Dear ##DONOR_NAME##,
+
+Thank you so much for your gift of ##DONATION_AMOUNT##  to AKPIRG through Pick.Click.Give. ##LETTER_BODY##
+
+Thank you for your support. We couldn’t do it without you.
+
+If you want to know more about what we’re working on, you can visit our website at akpirg.org, or you can always shoot me an email at akpirg@gmail.com
+
+Thank you again!
+
+Veri di Suvero
+Executive Director
+AKPIRG
+
