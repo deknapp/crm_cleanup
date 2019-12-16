@@ -25,16 +25,37 @@ function createLetterFolder(folderName) {
   return newFolder;
 } 
 
-function loadSpreadsheet() {
+function loadSpreadsheet(sheet) {
+  var data = sheet.getDataRange().getValues();
+  var firstNameIndex = data[0].indexOf('First');
+  var lastNameIndex = data[0].indexOf('Last');
+  var zipCodeIndex = data[0].indexOf('Zip');
+  var addressIndex = data[0].indexOf('Address');
+  var cityIndex = data[0].indexOf('City');
+  var stateIndex = data[0].indexOf('State');
+  var donationIndex = data[0].indexOf('Donation');
+  var contactArray = [];
 
+  for (var i = 0; i < data.length; i++) {
+    var frst = data[i][firstNameIndex];
+    var lst = data[i][lastNameIndex];
+    var zp = data[i][zipCodeIndex];
+    var addrss = data[i][addressIndex];
+    var cty = data[i][cityIndex]
+    var stte = data[i][stateIndex]
+    var dnation = data[i][donationIndex]
+    var contact = {FirstName: frst, LastName: lst, ZipCode: zp, Address: addrss, City: cty, State: stte, Donation: dnation}        contactArray.push(contact);
+  }
 
+  return contactArray;
 }
 
 
-function makeLetter(templateId, date, donorName, donationAmount) {
+function makeLetter(templateId, date, contact) { 
 
   //Make a copy of the template file
   var documentId = DriveApp.getFileById(templateId).makeCopy().getId();
+  var donorName = contact.FirstName + " " + contact.LastName;
   var letterName = date + "_" + donorName;
  
   //Rename the copied file
@@ -42,10 +63,11 @@ function makeLetter(templateId, date, donorName, donationAmount) {
       
   //Get the document body as a variable
   var body = DocumentApp.openById(documentId).getBody();
+  
     
   //Insert the entries into the document
   body.replaceText('##DONOR_NAME##', donorName);
-  body.replaceText('##DONATION_AMOUNT##', donationAmount);
+  body.replaceText('##DONATION_AMOUNT##', contact.Donation);
 }
 
 //Start with file upload of contact csv, a few more inputs, then get all the letters and address labels
