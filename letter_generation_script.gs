@@ -44,8 +44,9 @@ function loadSpreadsheet(sheet) {
     var cty = data[i][cityIndex]
     var stte = data[i][stateIndex]
     var dnation = data[i][donationIndex]
-    var contact = {FirstName: frst, LastName: lst, ZipCode: zp, Address: addrss, City: cty, State: stte, Donation: dnation}        contactArray.push(contact);
-  }
+    var contact = {FirstName: frst, LastName: lst, ZipCode: zp, Address: addrss, City: cty, State: stte, Donation: dnation}
+    contactArray.push(contact);
+  } 
 
   return contactArray;
 }
@@ -64,7 +65,6 @@ function makeLetter(templateId, date, contact) {
   //Get the document body as a variable
   var body = DocumentApp.openById(documentId).getBody();
   
-    
   //Insert the entries into the document
   body.replaceText('##DONOR_NAME##', donorName);
   body.replaceText('##DONATION_AMOUNT##', contact.Donation);
