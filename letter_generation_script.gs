@@ -9,9 +9,11 @@ function userInput() {
   var ui = DocumentApp.getUi();
   var spreadsheetUrl = ui.prompt('Enter URL of contact spreadsheet');
   var templateUrl = ui.prompt('Enter URL of template') 
+  var flderName = ui.prompt('Enter name for folder to put letters') 
+  var dte = ui.prompt('Enter date to put on letters') 
   var sprdsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
   var tmplate = DriveApp.openByUrl(templateUrl);
-  var input = {template: tmplate, spreadsheet: sprdsheet};
+  var input = {template: tmplate, spreadsheet: sprdsheet, folderName: flderName, date: dte};
   return input;
 }
 
@@ -51,8 +53,16 @@ function loadSpreadsheet(sheet) {
   return contactArray;
 }
 
+function move_file(file_id, target_folder_id) {
+  var source_file = DriveApp.getFileById(file_id);
+  var source_folder = source_file.getParents().next();
+  if (source_folder.getId() != target_folder_id) {
+    DriveApp.getFolderById(target_folder_id).addFile(source_file);
+    source_folder.removeFile(source_file);
+  }
+}
 
-function makeLetter(templateId, date, contact) { 
+function makeLetter(templateId, date, contact, folder) { 
 
   //Make a copy of the template file
   var documentId = DriveApp.getFileById(templateId).makeCopy().getId();
@@ -60,21 +70,29 @@ function makeLetter(templateId, date, contact) {
   var letterName = date + "_" + donorName;
  
   //Rename the copied file
+  var letterFileId = DriveApp.getFileById(documentId);  
+  
   DriveApp.getFileById(documentId).setName(letterName);
-      
+  move_file(documentId, folder);
+    
   //Get the document body as a variable
   var body = DocumentApp.openById(documentId).getBody();
   
   //Insert the entries into the document
+  body.replaceText('##DATE##', date);
   body.replaceText('##DONOR_NAME##', donorName);
   body.replaceText('##DONATION_AMOUNT##', contact.Donation);
 }
 
 //Start with file upload of contact csv, a few more inputs, then get all the letters and address labels
 function writeDonorLetters() {
- 
- 
-
+  var input = userInput();
+  var contactArray = loadSpreadsheet(input.spreadSheet);
+  var folder = createLetterFolder(input.folderName);
+  for (var i = 0; i < contactArray.length; i++) {
+    contact = contactArray[i];
+    makeLetter(input.template, input.date, contact, folder); 
+  }
 }
 
 
