@@ -12,7 +12,7 @@ function userInput() {
   //var templateUrl = ui.prompt('Enter URL of template') 
   var templateUrl = 'https://docs.google.com/document/d/1vjs75os4c_P8YVU3uRjkXpIk2kcd0bOSAM7jSc_U0Oo/edit?usp=sharing'
   //var flderName = ui.prompt('Enter name for folder to put letters') 
-  var flderName = 'test again'
+  var flderName = 'Final Stripe Donors 12/18/19 NK'
   var sprdsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
   var tmplate = DocumentApp.openByUrl(templateUrl);
   var input = {templateId: tmplate.getId(), spreadsheet: sprdsheet, folderName: flderName};
@@ -28,7 +28,7 @@ function createLetterFolder(folderName) {
   var parentFolder = fileInDrive.getParents().next();
 
   var newFolder=parentFolder.createFolder(folderName);
-  return newFolder;
+  return newFolder.getId();
 } 
 
 function loadSpreadsheet(sheet) {
@@ -60,11 +60,11 @@ function move_file(file_id, target_folder_id) {
   var source_folder = source_file.getParents().next();
   if (source_folder.getId() != target_folder_id) {
     DriveApp.getFolderById(target_folder_id).addFile(source_file);
-    source_folder.removeFile(source_file);
+    //source_folder.removeFile(source_file);
   }
 }
 
-function makeLetter(templateId, contact, folder) { 
+function makeLetter(templateId, contact, folderId) { 
 
   //Make a copy of the template file
   var documentId = DriveApp.getFileById(templateId).makeCopy().getId();
@@ -84,7 +84,7 @@ function makeLetter(templateId, contact, folder) {
   body.replaceText('##STATE##', contact.State);
   body.replaceText('##ZIP##', contact.ZipCode);
 
- // move_file(documentId, folder);
+  move_file(documentId, folderId);
 
 }
 
@@ -95,10 +95,10 @@ function makeLetter(templateId, contact, folder) {
 function writeDonorLetters() {
   var input = userInput();
   var contactArray = loadSpreadsheet(input.spreadsheet);
-  var folder = createLetterFolder(input.folderName);
+  var folderId = createLetterFolder(input.folderName);
   for (var i = 0; i < contactArray.length; i++) {
     contact = contactArray[i];
-    makeLetter(input.templateId, contact, folder); 
+    makeLetter(input.templateId, contact, folderId); 
   }
 }
 
