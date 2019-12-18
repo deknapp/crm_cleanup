@@ -6,14 +6,16 @@
 
 function userInput() {
 
-  var ui = DocumentApp.getUi();
-  var spreadsheetUrl = ui.prompt('Enter URL of contact spreadsheet');
-  var templateUrl = ui.prompt('Enter URL of template') 
-  var flderName = ui.prompt('Enter name for folder to put letters') 
-  var dte = ui.prompt('Enter date to put on letters') 
+  var ui = SpreadsheetApp.getUi();
+  //var spreadsheetUrl = ui.prompt('Enter URL of contact spreadsheet');
+  var spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1u298EM4NxMPor8bboohIVtHi0JFyZKQODKkUTZwjqQk/edit?usp=sharing'
+  //var templateUrl = ui.prompt('Enter URL of template') 
+  var templateUrl = 'https://docs.google.com/document/d/1vjs75os4c_P8YVU3uRjkXpIk2kcd0bOSAM7jSc_U0Oo/edit?usp=sharing'
+  //var flderName = ui.prompt('Enter name for folder to put letters') 
+  var flderName = 'test again'
   var sprdsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
-  var tmplate = DriveApp.openByUrl(templateUrl);
-  var input = {template: tmplate, spreadsheet: sprdsheet, folderName: flderName, date: dte};
+  var tmplate = DocumentApp.openByUrl(templateUrl);
+  var input = {template: tmplate, spreadsheet: sprdsheet, folderName: flderName};
   return input;
 }
 
@@ -73,7 +75,7 @@ function makeLetter(templateId, date, contact, folder) {
   move_file(documentId, folder);
     
   //Get the document body as a variable
-  var body = DocumentApp.openById(documentId).getBody();
+  var body = DriveApp.openById(documentId).getBody();
   
   //Insert the entries into the document
   body.replaceText('##FIRSTNAME##', contact.FirstName);
@@ -84,10 +86,13 @@ function makeLetter(templateId, date, contact, folder) {
   body.replaceText('##ZIP##', contact.ZipCode);
 }
 
-//Start with file upload of contact csv, a few more inputs, then get all the letters and address labels
+/**
+ * writes Donor letters
+ * @customfunction
+ */
 function writeDonorLetters() {
   var input = userInput();
-  var contactArray = loadSpreadsheet(input.spreadSheet);
+  var contactArray = loadSpreadsheet(input.spreadsheet);
   var folder = createLetterFolder(input.folderName);
   for (var i = 0; i < contactArray.length; i++) {
     contact = contactArray[i];
