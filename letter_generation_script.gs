@@ -29,13 +29,12 @@ function createLetterFolder(folderName) {
 
 function loadSpreadsheet(sheet) {
   var data = sheet.getDataRange().getValues();
-  var firstNameIndex = data[0].indexOf('First');
-  var lastNameIndex = data[0].indexOf('Last');
-  var zipCodeIndex = data[0].indexOf('Zip');
-  var addressIndex = data[0].indexOf('Address');
-  var cityIndex = data[0].indexOf('City');
-  var stateIndex = data[0].indexOf('State');
-  var donationIndex = data[0].indexOf('Donation');
+  var firstNameIndex = data[0].indexOf('First Name');
+  var lastNameIndex = data[0].indexOf('Last Name');
+  var zipCodeIndex = data[0].indexOf('Home Zip5');
+  var addressIndex = data[0].indexOf('Home Address');
+  var cityIndex = data[0].indexOf('Home City');
+  var stateIndex = data[0].indexOf('Home State');
   var contactArray = [];
 
   for (var i = 0; i < data.length; i++) {
@@ -43,10 +42,9 @@ function loadSpreadsheet(sheet) {
     var lst = data[i][lastNameIndex];
     var zp = data[i][zipCodeIndex];
     var addrss = data[i][addressIndex];
-    var cty = data[i][cityIndex]
-    var stte = data[i][stateIndex]
-    var dnation = data[i][donationIndex]
-    var contact = {FirstName: frst, LastName: lst, ZipCode: zp, Address: addrss, City: cty, State: stte, Donation: dnation}
+    var cty = data[i][cityIndex];
+    var stte = data[i][stateIndex];
+    var contact = {FirstName: frst, LastName: lst, ZipCode: zp, Address: addrss, City: cty, State: stte}; 
     contactArray.push(contact);
   } 
 
@@ -66,7 +64,6 @@ function makeLetter(templateId, date, contact, folder) {
 
   //Make a copy of the template file
   var documentId = DriveApp.getFileById(templateId).makeCopy().getId();
-  var donorName = contact.FirstName + " " + contact.LastName;
   var letterName = date + "_" + donorName;
  
   //Rename the copied file
@@ -79,9 +76,12 @@ function makeLetter(templateId, date, contact, folder) {
   var body = DocumentApp.openById(documentId).getBody();
   
   //Insert the entries into the document
-  body.replaceText('##DATE##', date);
-  body.replaceText('##DONOR_NAME##', donorName);
-  body.replaceText('##DONATION_AMOUNT##', contact.Donation);
+  body.replaceText('##FIRSTNAME##', contact.FirstName);
+  body.replaceText('##LASTNAME##', contact.LastName);
+  body.replaceText('##ADDRESS##', contact.Address);
+  body.replaceText('##CITY##', contact.City);
+  body.replaceText('##STATE##', contact.State);
+  body.replaceText('##ZIP##', contact.ZipCode);
 }
 
 //Start with file upload of contact csv, a few more inputs, then get all the letters and address labels
