@@ -15,16 +15,18 @@ function userInput() {
   var flderName = 'test again'
   var sprdsheet = SpreadsheetApp.openByUrl(spreadsheetUrl);
   var tmplate = DocumentApp.openByUrl(templateUrl);
-  var input = {template: tmplate, spreadsheet: sprdsheet, folderName: flderName};
+  var input = {templateId: tmplate.getId(), spreadsheet: sprdsheet, folderName: flderName};
   return input;
 }
 
 function createLetterFolder(folderName) {
 
-  var thisFileId = DriveApp.getActive().getId();
-  var thisFile = DriveApp.getFileById(thisFileId);
-  var parentFolder = thisFile.getParents()[0].getName();
-  var parentFolder=DriveApp.getFolderById(parentFolderId);
+  var thisFile = SpreadsheetApp.getActive();
+  var ssid = thisFile.getId();
+
+  var fileInDrive = DriveApp.getFolderById(ssid);
+  var parentFolder = fileInDrive.getParents().next();
+
   var newFolder=parentFolder.createFolder(folderName);
   return newFolder;
 } 
@@ -62,20 +64,17 @@ function move_file(file_id, target_folder_id) {
   }
 }
 
-function makeLetter(templateId, date, contact, folder) { 
+function makeLetter(templateId, contact, folder) { 
 
   //Make a copy of the template file
   var documentId = DriveApp.getFileById(templateId).makeCopy().getId();
-  var letterName = date + "_" + donorName;
- 
-  //Rename the copied file
-  var letterFileId = DriveApp.getFileById(documentId);  
+  var donorName = contact.FirstName + " " + contact.LastName;
+  var letterName = "12_18_19" + "_" + donorName;
   
   DriveApp.getFileById(documentId).setName(letterName);
-  move_file(documentId, folder);
-    
+ 
   //Get the document body as a variable
-  var body = DriveApp.openById(documentId).getBody();
+  var body = DocumentApp.openById(documentId).getBody();
   
   //Insert the entries into the document
   body.replaceText('##FIRSTNAME##', contact.FirstName);
@@ -84,6 +83,9 @@ function makeLetter(templateId, date, contact, folder) {
   body.replaceText('##CITY##', contact.City);
   body.replaceText('##STATE##', contact.State);
   body.replaceText('##ZIP##', contact.ZipCode);
+
+ // move_file(documentId, folder);
+
 }
 
 /**
@@ -96,7 +98,7 @@ function writeDonorLetters() {
   var folder = createLetterFolder(input.folderName);
   for (var i = 0; i < contactArray.length; i++) {
     contact = contactArray[i];
-    makeLetter(input.template, input.date, contact, folder); 
+    makeLetter(input.templateId, contact, folder); 
   }
 }
 
