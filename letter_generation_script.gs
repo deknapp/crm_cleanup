@@ -39,6 +39,7 @@ function loadSpreadsheet(sheet) {
   var addressIndex = data[0].indexOf('Home Address');
   var cityIndex = data[0].indexOf('Home City');
   var stateIndex = data[0].indexOf('Home State');
+  var donationIndex = data[0].indexOf('Home State');
   var contactArray = [];
 
   for (var i = 0; i < data.length; i++) {
@@ -48,7 +49,8 @@ function loadSpreadsheet(sheet) {
     var addrss = data[i][addressIndex];
     var cty = data[i][cityIndex];
     var stte = data[i][stateIndex];
-    var contact = {FirstName: frst, LastName: lst, ZipCode: zp, Address: addrss, City: cty, State: stte}; 
+    var dnationAmount = data[i][donationIndex]; 
+    var contact = {FirstName: frst, LastName: lst, ZipCode: zp, Address: addrss, City: cty, State: stte, DonationAmount: dnationAmount}; 
     contactArray.push(contact);
   } 
 
@@ -83,6 +85,7 @@ function makeLetter(templateId, contact, folderId) {
   body.replaceText('##CITY##', contact.City);
   body.replaceText('##STATE##', contact.State);
   body.replaceText('##ZIP##', contact.ZipCode);
+  body.replaceText('##DONATION##', contact.DonationAmount);
 
   move_file(documentId, folderId);
 
